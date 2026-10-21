@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+    </head>
+<body>
+    <canvas id="background" width="2000" height="1000" style="background-color:#fff; display: block;"></canvas>
+<script>
+document.body.style.margin = "0";
+document.body.style.padding = "0";
+document.body.style.overflow = "hidden";
+    const canvas = document.getElementById("background");
+const ctx = canvas.getContext('2d');
+let player1Y = 587;
+let player1YE = player1Y+55
+let player1X = 20;
+let player1XE = player1X+40
+let player2Y = 587;
+let player2YE = player2Y+55
+let player2X = 500;
+let player2XE = player2X+40
+let movingD = 0;
+let movingA = 0;
+let movingW = 0;
+let movingS = 0;
+let movingAD = 0;
+let movingAA = 0;
+let movingAW = 0;
+let movingAS = 0;
+let fE = 0;
+let sE = 0;
+let uE = 0;
+let bfE = 0;
+let bsE = 0;
+let buE = 0;
+let s2fE = 0;
+let s2sE = 0;
+let s2uE = 0;
+let s2bfE = 0;
+let s2bsE = 0;
+let s2buE = 0;
+let force = 0;
+let f = 0;
+let s2force = 0;
+let s2f = 0;
+let P1F = 0;
+let P2F = 0;
+let P1F2 = 0;
+let P2F2 = 0;
+let forceC = 0;
+let forceC2 = 0;
+
+let movingD2 = 0;
+let movingA2 = 0;
+let wallD = 0;
+let test = 0;
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === "d") {
+       movingD = 1 
+       movingD2 = 1
+    }
+    if (event.key === "a") { movingA = 1 }
+    if (event.key === "s") { movingS = 1 }
+    if (event.key === "w") { movingW = 1 }
+});
+document.addEventListener('keyup', (event) => {
+    if (event.key === "d") { movingD = 0 }
+    if (event.key === "a") { movingA = 0 }
+    if (event.key === "s") { movingS= 0 }
+    if (event.key === "w") { movingW = 0 }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === "ArrowRight") { movingAD = 1 }
+    if (event.key === "ArrowLeft") { movingAA = 1 }
+    if (event.key === "ArrowUp") { movingAW = 1 }
+    if (event.key === "ArrowDown") { movingAS = 1 }
+});
+document.addEventListener('keyup', (event) => {
+    if (event.key === "ArrowRight") { movingAD = 0 }
+    if (event.key === "ArrowLeft") { movingAA = 0 }
+    if (event.key === "ArrowUp") { movingAW = 0 }
+    if (event.key === "ArrowDown") { movingAS = 0 }
+});
+
+
+document.addEventListener('keydown', (event) => {
+     if (event.key === "z") {
+      console.log("X", player1X)
+      console.log("XE", player1XE)
+      console.log("Y",player1Y)
+      console.log("YE",player1YE)
+      console.log("end")
+     }
+
+ });
+
+//functon start
+
+function gameloop() {
+    ctx.clearRect(0, 0, 2500, 2500);
+    const dirt_g = {};
+    ctx.fillStyle = "#8c5d3a"
+    ctx.fillRect(0, 650, 1300, 70);
+    const grass_g = {};
+    ctx.fillStyle = "#3ccb26"
+    ctx.fillRect(0, 625, 1300, 25)
+
+    const dirt_1 = {};
+    ctx.fillStyle = "#8c5d3a";
+    ctx.fillRect(200, 250, 300, 20)
+    const grass_1 = {};
+    ctx.fillStyle = "#3ccb26"
+    ctx.fillRect(200, 240, 300, 10)
+
+    const player1 = {};
+    ctx.fillStyle = "#dfca45"
+    ctx.fillRect(player1X, player1Y, 40, 55)
+    const player1LE = {};
+    ctx.fillStyle = "white";
+    ctx.fillRect(player1X+fE, player1Y+uE, 14, 14)
+    const player1RE = {};
+    ctx.fillStyle = "white";
+    ctx.fillRect(player1X+sE, player1Y+uE, 14, 14)
+    const player1LBE = {};
+    ctx.fillStyle = "black";
+    ctx.fillRect(player1X+bfE+1, player1Y+buE+1, 6, 6)
+    const player1RBE = {};
+    ctx.fillStyle = "black";
+    ctx.fillRect(player1X+bsE+1, player1Y+buE+1, 6, 6)
+
+    const player2 = {};
+    ctx.fillStyle = "#3395ef"
+    ctx.fillRect(player2X, player2Y, 40, 55)
+    const player2LE = {};
+    ctx.fillStyle = "white";
+    ctx.fillRect(player2X+s2fE, player2Y+s2uE, 14, 14)
+    const player2RE = {};
+    ctx.fillStyle = "white";
+    ctx.fillRect(player2X+s2sE, player2Y+s2uE, 14, 14)
+    const player2LBE = {};
+    ctx.fillStyle = "black";
+    ctx.fillRect(player2X+s2bfE+1, player2Y+s2buE+1, 6, 6)
+    const player2RBE = {};
+    ctx.fillStyle = "black";
+    ctx.fillRect(player2X+s2bsE+1, player2Y+s2buE+1, 6, 6)
+
+
+
+player1YE = player1Y+55
+player1XE = player1X+40
+player2YE = player2Y+55
+player2XE = player2X+40
+
+    if (movingD === 1) { sE = 23 }
+    if (movingD === 1) { fE = 5 }
+    if (movingA === 1) { sE = 19}
+    if (movingA === 1) { fE = 3}
+    if (movingW === 1) { uE = 3 }
+    if (movingW === 0) { uE = 5 }
+    if (movingA === 0 && movingD === 0) {
+        fE = 4
+        sE = 21
+    }
+    if (movingD === 1) { bsE = 30 }
+    if (movingD === 1) { bfE = 12 }
+    if (movingA === 1) { bsE = 20}
+    if (movingA === 1) { bfE = 3 }
+    if (movingW === 1) { buE = 4 }
+    if (movingW === 0) { buE = 8 }
+    if (movingA === 0 && movingD === 0) {
+        bfE = 7
+        bsE = 24
+    }
+
+    if (movingAD === 1) { s2sE = 23 }
+    if (movingAD === 1) { s2fE = 5 }
+    if (movingAA === 1) { s2sE = 19}
+    if (movingAA === 1) { s2fE = 3}
+    if (movingAW === 1) { s2uE = 3 }
+    if (movingAW === 0) { s2uE = 5 }
+    if (movingAA === 0 && movingAD === 0) {
+        s2fE = 4
+        s2sE = 21
+    }
+    if (movingAD === 1) { s2bsE = 30 }
+    if (movingAD === 1) { s2bfE = 12 }
+    if (movingAA === 1) { s2bsE = 20}
+    if (movingAA === 1) { s2bfE = 3 }
+    if (movingAW === 1) { s2buE = 4 }
+    if (movingAW === 0) { s2buE = 8 }
+    if (movingAA === 0 && movingAD === 0) {
+        s2bfE = 7
+        s2bsE = 24
+    }
+//actual wall colsions
+        if (player1X <= 205 && player1XE >= 200 && player1Y < 270 && player1YE > 240) {
+       movingD2 = 0
+       player1X = 160 
+       wallD = 1
+    }
+    else {
+      wallD = 0
+    }
+        if (player1X <= 500 && player1XE >= 495 && player1Y < 270 && player1YE > 240) {
+       movingA2 = 0
+       player1X = 500 
+    }
+    else {
+        movingA2 = 1
+    }
+
+//movements ig
+    if (movingD === 1 && player1X <= 1240 && movingD2 === 1 && wallD === 0) { player1X += 5 }
+    if (player1X > 1240) {player1X = 1240}
+    if (movingA === 1 && player1X >= 0 && movingA2 === 1) { player1X -= 5 }
+    if (player1X < 0) {player1X = 0}
+
+    if (movingAD === 1 && player2X <= 1240) { player2X += 5 }
+    if (player2X > 1240) {player2X = 1240}
+    if (movingAA === 1 && player2X >= 0) { player2X -= 5 }
+    if (player2X < 0) {player2X = 0}
+
+//p1f
+    if (player1Y < 587) {
+        P1F = 1
+    } else {
+        P1F = 0
+    }
+
+// P1f2
+    if (player1Y > 587) {
+        P1F2 = 1
+    }
+    if (player1Y > 240-55 && player1Y < 270 && player1X > 200-40 && player1X < 500) {
+        P1F2 = 1
+    }
+    if (player1Y === 240-55 && player1Y < 270 && player1X > 200-40 && player1X < 500) {
+        force = 0
+        forceC = 1
+    }
+
+
+// wall colison and smth else
+onclick = () => document.documentElement.requestFullscreen();
+
+// gravity
+    if (player1Y === 587) { force = 0 }
+    if (movingW === 1) { force = 7 }
+    if (P1F === 1 && force > -15 && forceC !== 1) { force = force - 1 }
+    if (P1F2 === 1) { force = 1 }
+    player1Y = player1Y - force
+
+//wall colsion from down to up
+        if (player1X < 500 && player1XE > 200 && player1Y < 270 && player1YE > 265) {
+       player1Y = 270 
+    }
+
+
+    //p2f
+    if (player2Y < 587) {
+        P2F = 1
+    } else {
+        P2F = 0
+    }
+
+// P2f2
+    if (player2Y > 587) {
+        P2F2 = 1
+    }
+    if (player2Y > 240-55 && player2Y < 270 && player2X > 200-40 && player2X < 500) {
+        P2F2 = 1
+    }
+    if (player2Y === 240-55 && player2Y < 270 && player2X > 200-40 && player2X < 500) {
+        s2force = 0
+        forceC2 = 1
+    }
+
+    if (player2Y === 587) { s2force = 0 }
+    if (movingAW === 1) { s2force = 7 }
+    if (P2F === 1 && s2force > -15 && forceC2 !== 1) { s2force = s2force - 1 }
+    if (P2F2 === 1) { s2force = 1 }
+    player2Y = player2Y - s2force
+
+
+    P1F = 0;
+    P1F2 = 0;
+    P2F = 0;
+    P2F2 = 0;
+    forceC = 0;
+    forceC2 = 0;
+
+
+
+
+requestAnimationFrame(gameloop);
+}
+gameloop();
+</script>
+
+    </body>
+    </html>
